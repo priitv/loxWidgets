@@ -5,6 +5,7 @@ import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
@@ -103,12 +104,8 @@ public class CrossfadeDrawable extends Drawable implements Drawable.Callback {
 
 	@Override
 	public void draw(Canvas canvas) {
-		if (fromDrawable != null) {
-			fromDrawable.setBounds(canvas.getClipBounds());
-		}
-		if (toDrawable != null) {
-			toDrawable.setBounds(canvas.getClipBounds());
-		}
+		setDrawableBounds(canvas, fromDrawable);
+		setDrawableBounds(canvas, toDrawable);
 		boolean done = loadState();
 		if (done) {
 			drawDoneState(canvas);
@@ -117,6 +114,12 @@ public class CrossfadeDrawable extends Drawable implements Drawable.Callback {
 			drawProgress(canvas);
 		}
 		invalidateSelf();
+	}
+
+	private void setDrawableBounds(@NonNull Canvas canvas, Drawable drawable) {
+		if (drawable != null) {
+			drawable.setBounds(canvas.getClipBounds());
+		}
 	}
 
 	/**
